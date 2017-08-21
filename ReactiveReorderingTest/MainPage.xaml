@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="ReactiveReorderingTest.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ReactiveReorderingTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datamodel="using:ReactiveReorderingTest.DataModel"
+    mc:Ignorable="d" >
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" >
+        <StackPanel>
+            <TextBlock FontWeight="Bold">NowPlaying:</TextBlock>
+            <TextBlock Text="{x:Bind ViewModel.UpNext.CurrentEpisode.Title}">CurrentEpisodeTitle</TextBlock>
+            <TextBlock Text="{x:Bind ViewModel.UpNext.CurrentEpisode.PlaybackState.ElapsedTime, Mode=OneWay}">CurrentEpisodeTitle</TextBlock>
+
+            <TextBlock Margin="0,15,0,0" FontWeight="Bold">Upnext:</TextBlock>
+            <ListView ItemsSource="{x:Bind ViewModel.VirtualItemSource}" ReorderMode="Enabled" CanReorderItems="True" CanDragItems="True" AllowDrop="True" 
+                      DragItemsStarting="ListView_DragItemsStarting" DragItemsCompleted="ListView_DragItemsCompleted">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="datamodel:UpNextQueueEntry">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Episode.Title}"></TextBlock>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Episode.PlaybackState.ElapsedTime,Mode=OneWay}"></TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Command="{x:Bind ViewModel.PlaybackCommand}">Play</Button>
+            <Button Command="{x:Bind ViewModel.StopCommand}">Stop</Button>
+        </StackPanel>
+    </Grid>
+</Page>
