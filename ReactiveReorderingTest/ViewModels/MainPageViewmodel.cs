@@ -22,6 +22,8 @@ namespace ReactiveReorderingTest.ViewModels
 
         public RealmVirtualOrderedUpNextEntrySource VirtualItemSource { get; private set; }
 
+        public RealmAllEpisodeSource VirtualAllEpisodeSource { get; private set; }
+
         // This is used to test how observablecollection implements INotifyCollectionChanged, System.Collections.IList, IItemsRangeInfo, ISelectionInfo
         //public ObservableCollection<UpNextQueueEntry> NonVirtualItemSource { get; private set; }
 
@@ -55,6 +57,8 @@ namespace ReactiveReorderingTest.ViewModels
             }
 
             VirtualItemSource = new RealmVirtualOrderedUpNextEntrySource(this.UpNext);
+
+            VirtualAllEpisodeSource = new RealmAllEpisodeSource();
 
             #region fortesting
             //used to test observablecolleciton behavior

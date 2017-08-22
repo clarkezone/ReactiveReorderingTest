@@ -32,6 +32,20 @@
             </ListView>
             <Button Command="{x:Bind ViewModel.PlaybackCommand}">Play</Button>
             <Button Command="{x:Bind ViewModel.StopCommand}">Stop</Button>
+            <ListView ItemsSource="{x:Bind ViewModel.VirtualAllEpisodeSource}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="datamodel:UpNextQueueEntry">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Episode.Title}"></TextBlock>
+                            <TextBlock Grid.Column="1" Text="{x:Bind Episode.PlaybackState.ElapsedTime,Mode=OneWay}"></TextBlock>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>
