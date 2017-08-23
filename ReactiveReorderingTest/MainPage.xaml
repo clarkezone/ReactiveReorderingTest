@@ -30,22 +30,29 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
             <Button Command="{x:Bind ViewModel.PlaybackCommand}">Play</Button>
             <Button Command="{x:Bind ViewModel.StopCommand}">Stop</Button>
-            <ListView ItemsSource="{x:Bind ViewModel.VirtualAllEpisodeSource}" >
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="datamodel:UpNextQueueEntry">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="300"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Episode.Title}"></TextBlock>
-                            <TextBlock Grid.Column="1" Text="{x:Bind Episode.PlaybackState.ElapsedTime,Mode=OneWay}"></TextBlock>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
         </StackPanel>
+        <ListView ItemsSource="{x:Bind ViewModel.VirtualAllEpisodeSource}" Margin="0,270,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="datamodel:Episode">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="300"></ColumnDefinition>
+                            <ColumnDefinition Width="30"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="{x:Bind PublishedDate.Date}" Grid.Column="0"></TextBlock>
+                        <TextBlock Text="{x:Bind Feed.Title}" Grid.Column="1"></TextBlock>
+                        <TextBlock Text="{x:Bind Title}" Grid.Column="2"></TextBlock>
+                        <TextBlock Grid.Column="3" HorizontalAlignment="Right" Text="{x:Bind PlaybackState.ElapsedTime,Mode=OneWay}"></TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </Grid>
 </Page>

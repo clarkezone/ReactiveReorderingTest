@@ -114,22 +114,21 @@ namespace ReactiveReorderingTest.UWP.XAML.Import
             FeedRepository feedRepo = new FeedRepository(db);
             var FeedItemRepository = new FeedItemRepository(db);
 
-            var first = feedRepo.GetSubscribed().FirstOrDefault();
-            var items = await FeedItemRepository.GetFeedItemsAsync(first);
-
-            var trans = r.BeginWrite();
-
-            var f = new DataModel.Feed() { Title = first.Title, Uri = first.Uri.ToString() };
-            r.Add(f);
-
-            
-            foreach (var item in items)
+            foreach (var feed in feedRepo.GetSubscribed())
             {
-                var e = new DataModel.Episode() { Title = item.Title, Feed = f, Descrtiption = item.Description, UriKey = item.Key.ToString().ToLower() };
-                r.Add(e);
-            }
+                var trans = r.BeginWrite();
+                var f = new DataModel.Feed() { Title = feed.Title, Uri = feed.Uri.ToString() };
+                r.Add(f);
 
-            trans.Commit();
+                var items = await FeedItemRepository.GetFeedItemsAsync(feed);
+                foreach (var item in items)
+                {
+                    var e = new DataModel.Episode() { Title = item.Title, Feed = f, Descrtiption = item.Description, UriKey = item.Key.ToString().ToLower(), PublishedDate = item.PublishDate };
+                    r.Add(e);
+                }
+
+                trans.Commit();
+            }
         }
     }
 }

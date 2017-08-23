@@ -33,7 +33,7 @@ namespace ReactiveReorderingTest
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             SimpleIoc.Default.Register<IFakeMediaplayerService>(()=> { return new FakeMediaplayerService(); });
-            UWP.XAML.Import.EpisodeImporter.Import();
+            //UWP.XAML.Import.EpisodeImporter.Import();
         }
 
         /// <summary>

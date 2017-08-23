@@ -12,9 +12,19 @@ namespace ReactiveReorderingTest.UWP.XAML
 {
     public class RealmAllEpisodeSource : INotifyCollectionChanged, IList, IItemsRangeInfo, ISelectionInfo
     {
+        Realm r;
+        IQueryable<Episode> query;
+
+        public RealmAllEpisodeSource()
+        {
+            r = Realm.GetInstance("testdb");
+            query = r.All<DataModel.Episode>().OrderByDescending(ob => ob.PublishedDate);
+        }
+
         #region IItemsRangeInfo
         public void RangesChanged(ItemIndexRange visibleRange, IReadOnlyList<ItemIndexRange> trackedItems)
         {
+            Debug.WriteLine($"{visibleRange.FirstIndex} + {visibleRange.LastIndex}");
         }
 
         public void Dispose()
@@ -23,12 +33,23 @@ namespace ReactiveReorderingTest.UWP.XAML
         }
         #endregion
 
+        List<Episode> cache = null;
+
         #region IList
         public object this[int index]
         {
             get
             {
-                throw new NotImplementedException();
+                return query.ElementAt(index);
+
+                // we really need skip / take.  The following code proves that read perf is an issue
+
+                if (cache == null)
+                {
+                    //cache = query.Take(200).ToList();
+                    cache = query.ToList();
+                }
+                return cache[index];
             }
 
             set
@@ -41,7 +62,7 @@ namespace ReactiveReorderingTest.UWP.XAML
 
         public bool IsReadOnly => throw new NotImplementedException();
 
-        public int Count => throw new NotImplementedException();
+        public int Count => query.Count();
 
         public bool IsSynchronized => throw new NotImplementedException();
 

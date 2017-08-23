@@ -1,4 +1,5 @@
 ﻿using Realms;
+using System;
 
 namespace ReactiveReorderingTest.DataModel
 {
@@ -14,5 +15,7 @@ namespace ReactiveReorderingTest.DataModel
         public PlaybackState PlaybackState { get; set; }
 
         public Feed Feed { get; set; }
+
+        public DateTimeOffset PublishedDate { get; set; }
     }
 }
