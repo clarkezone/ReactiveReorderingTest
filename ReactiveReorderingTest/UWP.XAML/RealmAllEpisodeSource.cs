@@ -1,4 +1,5 @@
 ﻿using ReactiveReorderingTest.DataModel;
+using ReactiveReorderingTest.ViewModels;
 using Realms;
 using System;
 using System.Collections;
@@ -17,7 +18,7 @@ namespace ReactiveReorderingTest.UWP.XAML
 
         public RealmAllEpisodeSource()
         {
-            r = Realm.GetInstance("testdb");
+            r = DataModelManager.RealmInstance;
             query = r.All<DataModel.Episode>().OrderByDescending(ob => ob.PublishedDate);
         }
 
@@ -40,7 +41,9 @@ namespace ReactiveReorderingTest.UWP.XAML
         {
             get
             {
-                return query.ElementAt(index);
+                //TODO: this should be a factory or some other binding
+                return new EpisodeViewModel() { Episode = query.ElementAt(index) };
+                //return query.ElementAt(index);
 
                 // we really need skip / take.  The following code proves that read perf is an issue
 

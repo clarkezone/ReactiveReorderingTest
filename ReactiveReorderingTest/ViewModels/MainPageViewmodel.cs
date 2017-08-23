@@ -29,7 +29,7 @@ namespace ReactiveReorderingTest.ViewModels
 
         public MainPageViewmodel()
         {
-            r = Realm.GetInstance("testdb");
+            r = DataModelManager.RealmInstance;
 
             var queue = r.All<UpNextQueue>();
 

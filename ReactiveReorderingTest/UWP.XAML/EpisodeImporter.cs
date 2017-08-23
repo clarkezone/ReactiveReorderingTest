@@ -2,6 +2,7 @@
 using ObjectivePixel.Flame;
 using ObjectivePixel.Flame.Download;
 using ObjectivePixel.Flame.SQLite;
+using ReactiveReorderingTest.DataModel;
 using Realms;
 using System;
 using System.Collections.Generic;
@@ -107,7 +108,7 @@ namespace ReactiveReorderingTest.UWP.XAML.Import
     {
         public async static void Import()
         {
-            var r = Realm.GetInstance("testdb");
+            var r = DataModelManager.RealmInstance;
 
             Database db = new Database("bringcastdb");
             PlatformAdapter.SetPlatformAdapter(new NullPlatformAdapter(), "Importer");

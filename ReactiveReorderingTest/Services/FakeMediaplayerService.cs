@@ -35,7 +35,7 @@ namespace ReactiveReorderingTest.Services
 
             var task = Windows.System.Threading.ThreadPool.RunAsync((s) =>
             {
-                var threadsRealm = Realm.GetInstance("testdb");
+                var threadsRealm = DataModelManager.RealmInstance;
                 var data = threadsRealm.All<UpNextQueue>().FirstOrDefault();
 
                 while (playing && data != null)
