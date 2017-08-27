@@ -174,11 +174,12 @@ namespace ReactiveReorderingTest.UWP.XAML
                 UpNextQueueEntry f = null;
                 UpNextQueueEntry s = null;
 
-                if (insertedNewIndex>removedOriginalIndex)
+                var tr = r.Realm.BeginWrite();
+                f = r.Queue.Where(i => i.QuePosition == removedOriginalIndex).FirstOrDefault();
+                s = r.Queue.Where(i => i.QuePosition == insertedNewIndex).FirstOrDefault();
+
+                if (insertedNewIndex > removedOriginalIndex)
                 {
-                    var tr = r.Realm.BeginWrite();
-                    f = r.Queue.Where(i => i.QuePosition == removedOriginalIndex).FirstOrDefault();
-                    s = r.Queue.Where(i => i.QuePosition == insertedNewIndex).FirstOrDefault();
                     f.QuePosition++;
                     s.QuePosition--;
                     tr.Commit();
@@ -187,6 +188,18 @@ namespace ReactiveReorderingTest.UWP.XAML
                     CollectionChanged(this, args);
 
                     args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, s, (int)s.QuePosition, (int)f.QuePosition + 1);
+                    CollectionChanged(this, args);
+                } else if (removedOriginalIndex > insertedNewIndex)
+                {
+                
+                    f.QuePosition--;
+                    s.QuePosition++;
+                    tr.Commit();
+
+                    var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, f, (int)f.QuePosition, (int)f.QuePosition + 1);
+                    CollectionChanged(this, args);
+
+                    args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, s, (int)s.QuePosition, (int)f.QuePosition - 1);
                     CollectionChanged(this, args);
                 }
             }
