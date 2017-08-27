@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace ReactiveReorderingTest.UWP.XAML
@@ -15,7 +16,7 @@ namespace ReactiveReorderingTest.UWP.XAML
     /// Not clear if it can be generalized to work with Xamarin forms or not hence the namespace
     /// It assumes that it is managing UpNextQueueEntry types which have an intrinsic sort order as a field of the type
     /// </summary>
-    public class RealmVirtualOrderedUpNextEntrySource : INotifyCollectionChanged, System.Collections.IList, IItemsRangeInfo, ISelectionInfo
+    public class RealmVirtualOrderedUpNextEntrySource : INotifyCollectionChanged, IList, IItemsRangeInfo, ISelectionInfo
     {
         UpNextQueue r;
         private bool isReordering;
@@ -27,6 +28,24 @@ namespace ReactiveReorderingTest.UWP.XAML
         public RealmVirtualOrderedUpNextEntrySource(UpNextQueue aRealm)
         {
             r = aRealm;
+
+            var dispatcher = Window.Current.Dispatcher;
+
+            var disposable = r.Queue.AsRealmCollection().SubscribeForNotifications((s,e,x) => {
+                
+                // TODO: need a more general impl
+                if (e?.InsertedIndices?.Length == 1)
+                {
+                    dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+                    {
+                        object changedItem = this[e.InsertedIndices[0]];
+                        var what = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItem, e.InsertedIndices[0]);
+                        CollectionChanged(this, what);
+                    });
+                }
+            });
+
+            //TODO implement idisposible and call the above
         }
 
         #region IItemsRangeInfo
@@ -87,6 +106,9 @@ namespace ReactiveReorderingTest.UWP.XAML
         {
             insertedNewIndex = index;
             inserted = value;
+
+            //var args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, new List<UpNextQueueEntry>() { f, s } as IList);
+            //CollectionChanged(this, args);
         }
 
         public void Remove(object value)

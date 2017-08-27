@@ -10,25 +10,30 @@ namespace ReactiveReorderingTest.ViewModels
 {
     class EpisodeViewModel : ViewModelBase
     {
-        private RelayCommand _incrementCommand;
+        private new RelayCommand<EpisodeViewModel> _incrementCommand;
 
         public DataModel.Episode Episode { get; set; }
 
         public ICommand AddUpNext { get; set; }
 
-        public RelayCommand AddItemUpNextCommand
+        public new RelayCommand<EpisodeViewModel> AddItemUpNextCommand
         {
             get
             {
                 return _incrementCommand
-                    ?? (_incrementCommand = new RelayCommand(
-                    () =>
+                    ?? (_incrementCommand = new RelayCommand<EpisodeViewModel>(
+                    (m) =>
                     {
+                        var trans = DataModelManager.RealmInstance.BeginWrite();
+
                         var upNextQueue = DataModelManager.RealmInstance.All<UpNextQueue>().FirstOrDefault();
                         
+                        UpNextQueueEntry en = new UpNextQueueEntry() { Episode = m.Episode, QuePosition = upNextQueue.Queue.Count };
+                        upNextQueue.Queue.Insert(upNextQueue.Queue.Count, en);
 
-                        // UpNextQueueEntry en = new UpNextQueueEntry() { Episode = e, QuePosition = 0 };
-                        //u.Queue.Insert(0, en);
+                        trans.Commit();
+
+                        
                     }));
             }
         }
