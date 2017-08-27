@@ -41,12 +41,12 @@ namespace ReactiveReorderingTest.UWP.XAML
                 // TODO: need a more general impl
                 if (e?.InsertedIndices?.Length == 1)
                 {
-                    dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
-                    {
+                    //dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+                    //{
                         object changedItem = this[e.InsertedIndices[0]];
                         var what = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, changedItem, e.InsertedIndices[0]);
                         CollectionChanged(this, what);
-                    });
+                    //});
                 }
             });
 

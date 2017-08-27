@@ -110,18 +110,28 @@ If you build and run Phase 1 here are some of the interesting things you will ob
 
     As you can see, the thread is talking directly to what is apparently a different instance of the object that was retreieved seperately.  What's interesting, though is that:
 
-    When calling the datamodel, no need to worry about invoking using the dispatcher or locking to guard against writes.  Just go ahead and update our copy of the object 
+    __Thread safety__: When calling the datamodel, no need to worry about invoking using the dispatcher or locking to guard against writes.  Just go ahead and update our copy of the object and Realm will do the right thing. 
 
-    Identity: Because Realm treats entities returned from a database query as managed objects and tracks instances across threads as a single logical instance with full thread safe update semantics, the world is much simpler and nicer than one where every object returned from the same query but at different times is always stale and disconnected.  These are live objects that are all kept in sync and updated.
+    __Identity__: Because Realm treats entities returned from a database query as managed objects and tracks instances across threads as a single logical instance with full thread safe update semantics, the world is much simpler and nicer than one where every object returned from the same query but at different times is always stale and disconnected.  These are live objects that are all kept in sync and updated.
 
-    Eventing:  Building on the above, one of Realm's selling points is that it is fully realtime meaning that as objects are updated they fire change notifications.  This is done from the light weight (relative to DependencyObject at least) INotifyPropertyChanged.  This in turn makes it super easy to ensure that the UI is up-to-date with databinding
+    __Eventing__:  Building on the above, one of Realm's selling points is that it is fully realtime meaning that as objects are updated they fire change notifications.  This is done from the light weight (relative to DependencyObject at least) INotifyPropertyChanged.  This in turn makes it super easy to ensure that the UI is up-to-date with databinding
 
-    Durability: Modifying any "instance" of an object in a write transaction persists the change to the local MYSQL backing store.
+    __Durability__: Modifying any "instance" of an object in a write transaction persists the change to the local MYSQL backing store.
 
 2. If you drag and drop to reorder items whist the simulated playback is happening, notice that the UI just does the right thing even though the ListView contents are being mutated by the data updates.
 
 The above is totally awesome, no doubt.  I have not done extensive performance measurements yet to see at what cost this comes, however, in terms of the shear paucity of code needed to pull off this prototype compared to what we have in the current BringCast data / UI layers I'm willing to give up a bit of performance for the correctness and simplification it might bring to the codebase.  As we move on to latter phases, we'll find out more about the overall performance characteristics / scalability of this approach accross thousands of objects and more complex queries.  But color me impressed at this stage.
 
 ## Phase 2
-In the second phase, I've added another listview that shows an "infinitely" scrolling list of episodes.  Some of the things I wanted to look into in this investigation were how well Realm would perform in this scenario as well as how easy / hard it is to  
+In the second phase, I've added another listview that shows an "infinitely" scrolling list of episodes.
+
+![pic](/ReadmeAssets/allepisodes.png)
+
+  Some of the things I wanted to look into in this investigation were how well Realm would perform in a data virtualization scenario as well as how easy / hard it is to implement a XAML listview backed by a custom ItemSource built using INotifyCollectionChanged, IList, IItemsRangeInfo, ISelectionInfo which is the required set of interfaces needed to do build a virtualizing listview ItemSource.
+
+Getting the virtualizing datasource going with realm
+
+MVVM item wrappers and commands
+
+First Realm Limitation: no support for skip and take
 
