@@ -1,10 +1,10 @@
 # ReactiveReorderingTest
-Testing out how to build a reorderable list of items with Realm, the MVVM pattern and .NET.  The goals of the project are 
+Testing out how to build a Windows UWP, along with iOS and Android versions containing a reorderable list of items using [Realm](http://realm.io), MVVMLite, .NET Standard 2.0 and Xamarin forms.  The goals of the project are 
 
 1. Experiment with Realm for use as a reactive model layer to power a reactive UI layer
 1. Experiement with a XAML Itemsource based on INotifyCollectionChanged, System.Collections.IList, IItemsRangeInfo, ISelectionInfo stuff.. a better way of doing list virtualization in XAML than IncrementalLoadingCollection (more control, new scenarios like grouping)
 1. Experiment with MVVM using MVVMLite and x:Bind
-1. Experiment with dotnet standard 2 and Xamarin forms
+1. Experiment with dotnet standard 2 UWP support in fall creators update as well as Xamarin forms
 1. Kick the tyres of Realm's object server for realtime data updates across end points
 
 and these are in turn motivated by experiences I've had co-developing the [BringCast Windows UWP app](http://bringcast.com).
@@ -15,6 +15,9 @@ Mark Osborn and I learned many interesting lessons in our journey building the B
 Another constraint was around the view pattern we used to build the UX.  At the time, x:Bind didn't exist and we were reticent adopting MVVM / old school databinding due to concerns over performance.  This lead us down a custom MVC route.  While we did pull off the BringCast 4.0 release, we've had overwhelming feedback from users that stability is not as good as previous versions. In part this tems from the complexity of the codebase and some of the above choices which have come to bite us.
 
 Which brings us to today.
+
+## Realm
+Realm is a SF based startup who, according to [their website](http://realm.io), make it easy to build modern reactive apps, realtime collaborative features, and offline-first experiences.  I've been tracking them for a while and have been meaning to look into their stuff.  The catalyst for this was when I recently became aware of their dotnet port which they confusingly refer to as Realm Xamarin(.NET) but seems to work just fine in other .NET environments such as UWP.  The latest docs are here: [https://realm.io/docs/xamarin/latest/](https://realm.io/docs/xamarin/latest/)
 
 ## The Prototype
 
@@ -28,9 +31,9 @@ With the goals stated above, the rough plan / TODO list for this prototype is:
 So far, 1 has been accomplished which is what is reflected in the repo.
 
 ## Phase 1
-The UI is all test quality: there is a now playing section and an up next list representing the next episodes.  
+The UI is all test quality: there is a now playing section and an up next list representing the next episodes (this is using the well trodden podcast scenario as you may have guessed from above :-).  
 
-![BuildCast](/ReadmeAssets/UI.png)
+![UI](/ReadmeAssets/UI.png)
 
 These are bound to a backing viewmodel which in turn wraps this model class
 
@@ -56,15 +59,8 @@ r = Realm.GetInstance("testdb");
 
 var queue = r.All<UpNextQueue>();
 
-if (queue.Count() == 0) //HACK
-{
-    CreateInitialFakeData();
-}
-else
-{
-    this.UpNext = queue.FirstOrDefault();
-    ...
-}
+this.UpNext = queue.FirstOrDefault();
+
 ```
 
 The UI is all bound to this object using x:Bind:
@@ -125,3 +121,7 @@ If you build and run Phase 1 here are some of the interesting things you will ob
 2. If you drag and drop to reorder items whist the simulated playback is happening, notice that the UI just does the right thing even though the ListView contents are being mutated by the data updates.
 
 The above is totally awesome, no doubt.  I have not done extensive performance measurements yet to see at what cost this comes, however, in terms of the shear paucity of code needed to pull off this prototype compared to what we have in the current BringCast data / UI layers I'm willing to give up a bit of performance for the correctness and simplification it might bring to the codebase.  As we move on to latter phases, we'll find out more about the overall performance characteristics / scalability of this approach accross thousands of objects and more complex queries.  But color me impressed at this stage.
+
+## Phase 2
+In the second phase, I've added another listview that shows an "infinitely" scrolling list of episodes.  Some of the things I wanted to look into in this investigation were how well Realm would perform in this scenario as well as how easy / hard it is to  
+

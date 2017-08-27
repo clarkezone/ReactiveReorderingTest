@@ -120,9 +120,6 @@
     <Content Include="Assets\testdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\testdb.lock">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="ReactiveReorderingTest_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
