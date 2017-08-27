@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,7 +35,26 @@ namespace ReactiveReorderingTest
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             SimpleIoc.Default.Register<IFakeMediaplayerService>(()=> { return new FakeMediaplayerService(); });
+
+            var task = EnsureInitialRealmDb();
             //UWP.XAML.Import.EpisodeImporter.Import();
+        }
+
+        private async Task EnsureInitialRealmDb()
+        {
+            var mainDbFileName = "testdb";
+            var mainDbAssetPath = $"ms-appx:///Assets/{mainDbFileName}";
+
+            var data = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+
+            var exists = await data.TryGetItemAsync(mainDbFileName);
+
+            if (exists == null)
+            {
+                var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri(mainDbAssetPath));
+                var database = await file.CopyAsync(data);
+            }
         }
 
         /// <summary>

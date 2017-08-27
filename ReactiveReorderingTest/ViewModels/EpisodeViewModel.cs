@@ -28,7 +28,7 @@ namespace ReactiveReorderingTest.ViewModels
 
                         var upNextQueue = DataModelManager.RealmInstance.All<UpNextQueue>().FirstOrDefault();
                         
-                        UpNextQueueEntry en = new UpNextQueueEntry() { Episode = m.Episode, QuePosition = upNextQueue.Queue.Count };
+                        UpNextQueueEntry en = new UpNextQueueEntry() { Episode = m.Episode, QuePosition = upNextQueue.Queue.Count};
                         upNextQueue.Queue.Insert(upNextQueue.Queue.Count, en);
 
                         trans.Commit();
