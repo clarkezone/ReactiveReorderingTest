@@ -33,7 +33,7 @@ So far, 1 has been accomplished which is what is reflected in the repo.
 ## Phase 1
 The UI is all test quality: there is a now playing section and an up next list representing the next episodes (this is using the well trodden podcast scenario as you may have guessed from above :-).  
 
-![UI](/ReadmeAssets/UI.png)
+![UI](/ReadmeAssets/UI.PNG)
 
 These are bound to a backing viewmodel which in turn wraps this model class
 
@@ -125,7 +125,7 @@ The above is totally awesome, no doubt.  I have not done extensive performance m
 ## Phase 2
 In the second phase, I've added another listview that shows an "infinitely" scrolling list of episodes.
 
-![pic](ReadmeAssets/allepisodes.png)
+![pic](ReadmeAssets/allepisodes.PNG)
 
   Some of the things I wanted to look into in this investigation were how well Realm would perform in a data virtualization scenario as well as how easy / hard it is to implement a XAML listview backed by a custom ItemSource built using INotifyCollectionChanged, IList, IItemsRangeInfo, ISelectionInfo which is the required set of interfaces needed to do build a virtualizing listview ItemSource.
 
