@@ -19,6 +19,9 @@ namespace ReactiveReorderingTest.UWP.XAML
     public class RealmVirtualOrderedUpNextEntrySource : INotifyCollectionChanged, IList, IItemsRangeInfo, ISelectionInfo
     {
         UpNextQueue r;
+
+        IQueryable<UpNextQueueEntry> queue;
+
         private bool isReordering;
         private int removedOriginalIndex;
         private object removed;
@@ -28,6 +31,8 @@ namespace ReactiveReorderingTest.UWP.XAML
         public RealmVirtualOrderedUpNextEntrySource(UpNextQueue aRealm)
         {
             r = aRealm;
+
+            queue = r.Queue.OrderBy(ob => ob.QuePosition).AsQueryable();
 
             var dispatcher = Window.Current.Dispatcher;
 
@@ -61,7 +66,7 @@ namespace ReactiveReorderingTest.UWP.XAML
 
         #region IList
         public object this[int index] {
-            get => r.Queue.OrderBy(ob=>ob.QuePosition).ElementAt(index); set => throw new NotImplementedException();
+            get => queue.ElementAt(index); set => throw new NotImplementedException();
         }
 
         public bool IsFixedSize => throw new NotImplementedException();
@@ -94,7 +99,7 @@ namespace ReactiveReorderingTest.UWP.XAML
 
         public IEnumerator GetEnumerator()
         {
-            return r.Queue.OrderBy(ob => ob.QuePosition).GetEnumerator();
+            return queue.GetEnumerator();
         }
 
         public int IndexOf(object value)

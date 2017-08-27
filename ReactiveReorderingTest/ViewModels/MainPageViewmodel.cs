@@ -1,15 +1,11 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
 using ReactiveReorderingTest.DataModel;
 using ReactiveReorderingTest.Services;
 using ReactiveReorderingTest.UWP.XAML;
 using Realms;
-using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
 
 namespace ReactiveReorderingTest.ViewModels
@@ -24,43 +20,40 @@ namespace ReactiveReorderingTest.ViewModels
 
         public RealmAllEpisodeSource VirtualAllEpisodeSource { get; private set; }
 
+        #region DebugStuff
         // This is used to test how observablecollection implements INotifyCollectionChanged, System.Collections.IList, IItemsRangeInfo, ISelectionInfo
-        //public ObservableCollection<UpNextQueueEntry> NonVirtualItemSource { get; private set; }
+        //public ObservableCollection<UpNextQueueEntry> NonVirtualItemSource { get; private set; } 
+        #endregion
 
         public MainPageViewmodel()
         {
-            r = DataModelManager.RealmInstance;
+            this.UpNext = UpNextQueue.Instance;
 
-            var queue = r.All<UpNextQueue>();
-
-            if (queue.Count() == 0)
-            {
-                CreateInitialData();
-            }
-            else
-            {
-                this.UpNext = queue.FirstOrDefault();
-                this.UpNext.CurrentEpisode.PlaybackState.PropertyChanged += (o, ex) => {
+            #region DebugStuff
+            this.UpNext.CurrentEpisode.PlaybackState.PropertyChanged += (o, ex) =>
+                {
                     Debug.WriteLine("State changed");
                     RaisePropertyChanged("UpNext");
                 };
 
-                this.UpNext.CurrentEpisode.PropertyChanged += (o, ex) => {
-                    Debug.WriteLine("CurrentEpisode changed");
-                };
+            this.UpNext.CurrentEpisode.PropertyChanged += (o, ex) =>
+            {
+                Debug.WriteLine("CurrentEpisode changed");
+            };
 
-                this.UpNext.PropertyChanged += (o, ex) => {
-                    Debug.WriteLine("Upnext changed");
-                };
+            this.UpNext.PropertyChanged += (o, ex) =>
+            {
+                Debug.WriteLine("Upnext changed");
+            }; 
+            #endregion
 
-                RaisePropertyChanged("UpNext");
-            }
+            RaisePropertyChanged("UpNext");
 
             VirtualItemSource = new RealmVirtualOrderedUpNextEntrySource(this.UpNext);
 
             VirtualAllEpisodeSource = new RealmAllEpisodeSource();
 
-            #region fortesting
+            #region DebugStuff
             //used to test observablecolleciton behavior
             //NonVirtualItemSource = new ObservableCollection<UpNextQueueEntry>();
             //NonVirtualItemSource.CollectionChanged += NonVirtualItemSource_CollectionChanged;
@@ -71,21 +64,25 @@ namespace ReactiveReorderingTest.ViewModels
             //} 
             #endregion
 
-            PlaybackCommand = new RelayCommand(() => {
+            PlaybackCommand = new RelayCommand(() =>
+            {
                 var service = SimpleIoc.Default.GetInstance<IFakeMediaplayerService>();
                 service.Play();
             });
 
-            StopCommand = new RelayCommand(() => {
+            StopCommand = new RelayCommand(() =>
+            {
                 var service = SimpleIoc.Default.GetInstance<IFakeMediaplayerService>();
                 service.Stop();
             });
         }
 
+        #region DebugStuff
         //private void NonVirtualItemSource_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         //{
         //    Debug.WriteLine(sender, e.Action.ToString());
-        //}
+        //} 
+        #endregion
 
         internal void EndReorder()
         {
@@ -101,32 +98,6 @@ namespace ReactiveReorderingTest.ViewModels
 
         public ICommand StopCommand { get; private set; }
 
-        private void CreateInitialData()
-        {
-            var trans = r.BeginWrite();
-
-            Feed f = new Feed() { Title = "Windows Weekly", Uri = new Uri("http://feeds.twit.tv/ww.xml").ToString() };
-            r.Add(f);
-
-            Episode e = new Episode() { Title = "WW 531: B is for Broadwell", Feed = f, Descrtiption = "The one where Paul misbehaves", UriKey = "http://www.podtrac.com/pts/redirect.mp3/cdn.twit.tv/audio/ww/ww0531/ww0531.mp3" };
-            e.PlaybackState = new PlaybackState() { ElapsedTime = 10 };
-            r.Add(e);
-
-            UpNextQueue u = new UpNextQueue() { CurrentEpisode = e };
-            r.Add(u);
-
-            UpNextQueueEntry en = new UpNextQueueEntry() { Episode = e, QuePosition = 0 };
-            u.Queue.Insert(0, en);
-
-            f = new Feed() { Title = "MacBreak Weekly", Uri = new Uri("http://feeds.twit.tv/mbw.xml").ToString() };
-            r.Add(f);
-
-            e = new Episode() { Title = "MBW 571: Cardboard Hats for Dung Beetles", Feed = f, Descrtiption = "The one where Paul misbehaves", UriKey = "http://www.podtrac.com/pts/redirect.mp3/cdn.twit.tv/audio/mbw/mbw0571/mbw0571.mp3" };
-            r.Add(e);
-            en = new UpNextQueueEntry() { Episode = e, QuePosition = 1 };
-            u.Queue.Insert(1, en);
-
-            trans.Commit();
-        }
+       
     }
 }
