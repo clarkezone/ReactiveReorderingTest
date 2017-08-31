@@ -14,11 +14,13 @@
             <ColumnDefinition Width="400"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Background="#FFFAFAFA" Padding="5,5,5,5">
+        
+        <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}" Grid.RowSpan="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Padding="5,5,5,5">
             <TextBlock FontWeight="Bold">NowPlaying:</TextBlock>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
             <TextBlock Margin="0,0,4,0">Title:</TextBlock><TextBlock Text="{x:Bind ViewModel.UpNext.CurrentEpisode.Title}">CurrentEpisodeTitle</TextBlock>
@@ -49,7 +51,8 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
+        </Grid>
+
         <TextBlock Margin="0,15,0,0" FontWeight="Bold" Grid.Column="1">All episodes by date:</TextBlock>
         <ListView ItemsSource="{x:Bind ViewModel.VirtualAllEpisodeSource}" Margin="0,50,10,0" Grid.Column="1" Grid.RowSpan="2">
             <ListView.ItemContainerStyle>

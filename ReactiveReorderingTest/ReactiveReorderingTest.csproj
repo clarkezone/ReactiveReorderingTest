@@ -101,6 +101,7 @@
     <Compile Include="DataModel\PlaybackState.cs" />
     <Compile Include="DataModel\UpNextQueue.cs" />
     <Compile Include="DataModel\UpNextQueueEntry.cs" />
+    <Compile Include="Helpers\FluentHelpers.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -112,6 +113,10 @@
     <Compile Include="UWP.XAML\RealmVirtualOrderedUpNextEntrySource.cs" />
     <Compile Include="ViewModels\EpisodeViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewmodel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="Views\NavigationRoot.xaml.cs">
+      <DependentUpon>NavigationRoot.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -123,7 +128,9 @@
     <None Include="ReactiveReorderingTest_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FodyWeavers.xml" />
+    <Content Include="FodyWeavers.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -141,6 +148,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NavigationRoot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

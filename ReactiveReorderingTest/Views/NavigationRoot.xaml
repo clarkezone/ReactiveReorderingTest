@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="ReactiveReorderingTest.Views.NavigationRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ReactiveReorderingTest.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datamodel="using:ReactiveReorderingTest.Views"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <NavigationView AlwaysShowHeader="False" >
+            <NavigationView.MenuItems>
+                <NavigationViewItem>One</NavigationViewItem>
+                <NavigationViewItem>Two</NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="rootFrame">
+            </Frame>
+        </NavigationView>
+    </Grid>
+</Page>

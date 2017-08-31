@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using ReactiveReorderingTest.Helpers;
 using ReactiveReorderingTest.Services;
+using ReactiveReorderingTest.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,6 +68,8 @@ namespace ReactiveReorderingTest
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
+            FluentHelpers.SetupTitlebar();
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -91,7 +95,7 @@ namespace ReactiveReorderingTest
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(NavigationRoot), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
